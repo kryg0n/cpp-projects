@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/kryg0n/Documents/Projects/cpp-projects/Basics/variablearr'
+relocations:     []
+...
