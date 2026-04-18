@@ -1,0 +1,47 @@
+1 Overview
+In this individual project, you are required to explore at least three different methods to find out the
+most frequent duplicate element in a given list of numbers.
+2 Detailed Requirements
+You are asked to implement and compare different methods of finding out the most frequent duplicate
+element in a given list of numbers. If there are two or more elements having the same appearing frequency,
+return the one that appears first in the list. In particular, you need to provide at least three (i.e., ≥ 3)
+different methods and compare their performance with time complexity analysis.
+In your submitted report, you need to explicitly explain:
+• the algorithms and data structures of the methods you have tried;
+• the time complexity of each method (mainly the worst-case time complexity);
+Note that you are NOT required to provide formal time complexity analysis, but some intuitive or informal
+discussion.
+Experimental Evaluations
+In this project, you may design and generate some test data for each method so that you can evaluate
+and compare the differences in efficiency among different methods over different generated inputs. Figures
+that intuitively show how the input data affects the selection among different methods are appreciated but
+optional. Note that, the compiling command for compiling your programs (written in C++) should be
+clearly stated in the report. Some available compiling options are -std=c++11, -lm, -O2.
+If you cannot pass the OJ test cases, the maximum marks you can get is 30.
+3 OJ Input and Output
+Input
+The input contains multiple test cases. For each test case, it contains a line of integers (the number of
+integers is less than 105 while each integer is ∈ (−105, 105)).
+Output
+Each line of the output is the most frequent duplicated element in the list.
+Sample Input Sample Output
+-1 1 -1 8 | -1
+1 2 3 3 3 4 4 5 | 3
+2 3 1 5 4 3 2 1 | 2
+
+----------
+TASK: Implement a C++ program to find the most frequent duplicate element in a list.
+
+REQUIREMENTS:
+- Input: Multiple test cases, each line contains integers (n < 10^5, each integer ∈ (-10^5, 10^5))
+- Output: Most frequent duplicate element (frequency > 1)
+- Tie-breaking: If same frequency, return element that appears FIRST in original list
+- Need 3 DIFFERENT methods with time complexity analysis
+
+DELIVERABLES:
+1. atleast 4 complete C++ implementations
+2. Time complexity analysis for each method
+3. Local testing framework with file I/O
+4. Performance comparison
+
+Generate the solution now.

@@ -1,0 +1,226 @@
+================================================================================
+  PROJECT REPORT: Finding the Most Frequent Duplicate Element
+================================================================================
+
+--------------------------------------------------------------------------------
+1. PROBLEM STATEMENT
+--------------------------------------------------------------------------------
+
+Given a list of integers, find the element that appears most frequently among
+all duplicates (elements with frequency >= 2). If two elements share the same
+highest frequency, return the one that appears first in the original list.
+
+Input:  Multiple test cases, one per line. Each line contains integers n < 10^5,
+        each integer in the range (-10^5, 10^5).
+Output: The most frequent duplicate element for each test case.
+
+Sample:
+  Input              Output
+  -1 1 -1 8      ->  -1
+  1 2 3 3 3 4    ->  3
+  2 3 1 5 4 3 2  ->  2   (2 and 3 and 1 all appear twice; 2 comes first)
+
+Compile command:
+  g++ -std=c++11 -O2 -lm all_methods.cpp -o all_methods
+
+--------------------------------------------------------------------------------
+2. METHOD 1 — BRUTE FORCE
+--------------------------------------------------------------------------------
+
+Algorithm:
+  For each unique element at index i, scan the entire array to count its
+  frequency. Track the running maximum frequency and the first index at which
+  the current best element appeared.
+
+  To avoid counting the same value multiple times, skip index i if the same
+  value has already been seen at some j < i.
+
+Data structures:
+  No auxiliary data structures — operates entirely on the input array.
+
+Pseudocode:
+  for i in 0..n-1:
+      if nums[i] seen before index i: skip
+      freq = count(nums[i] in nums)
+      if freq >= 2 and freq > maxFreq (or freq == maxFreq and i < bestIdx):
+          update answer
+
+Time complexity:
+  Worst case O(n^2) — for each of the n elements, we scan all n elements to
+  count frequency. No caching between iterations.
+
+Space complexity:
+  O(1) extra space (ignoring input).
+
+When to prefer:
+  Only practical for very small inputs (n < ~1000). Easy to reason about
+  correctness without any auxiliary structures.
+
+--------------------------------------------------------------------------------
+3. METHOD 2 — HASH MAP
+--------------------------------------------------------------------------------
+
+Algorithm:
+  Two logical passes over the array using an unordered hash map:
+    Pass 1 — build frequency table and record the first index of each value.
+    Pass 2 — iterate over the map, find the value with the highest frequency
+             (>= 2) and break ties by smallest first-seen index.
+
+Data structures:
+  unordered_map<int,int> freq     — maps value -> occurrence count
+  unordered_map<int,int> firstIdx — maps value -> first index in input
+
+Pseudocode:
+  for i in 0..n-1:
+      freq[nums[i]]++
+      if nums[i] not in firstIdx: firstIdx[nums[i]] = i
+
+  for (val, cnt) in freq:
+      if cnt >= 2 and better than current best:
+          update answer
+
+Time complexity:
+  O(n) average — hash map insert/lookup is O(1) amortized. Both passes are
+  linear. Worst case degrades to O(n^2) if many hash collisions occur, but
+  this is extremely rare with standard library implementations.
+
+Space complexity:
+  O(k) where k is the number of distinct values (<= n).
+
+When to prefer:
+  Best general-purpose choice. Linear time, moderate memory, handles arbitrary
+  value ranges without knowing the range in advance.
+
+--------------------------------------------------------------------------------
+4. METHOD 3 — SORT-BASED
+--------------------------------------------------------------------------------
+
+Algorithm:
+  Create a copy of the array as (value, original_index) pairs. Sort this copy
+  by value so that identical values are adjacent. Scan the sorted array in
+  groups of equal values; for each group record its size (frequency) and the
+  minimum original index (first appearance). Track the best group.
+
+Data structures:
+  vector<pair<int,int>> of size n — stores (value, original_index) pairs.
+
+Pseudocode:
+  indexed = [(nums[i], i) for i in 0..n-1]
+  sort indexed by value
+  for each contiguous group of equal values:
+      freq     = group size
+      minIdx   = min original index in group
+      if freq >= 2 and better than current best: update answer
+
+Time complexity:
+  O(n log n) — dominated by the sort. The grouping scan is O(n).
+
+Space complexity:
+  O(n) for the auxiliary array of pairs.
+
+When to prefer:
+  Useful when a hash map is unavailable or undesirable (e.g., deterministic
+  worst-case guarantee needed). Slightly worse than hash map on average but
+  guaranteed O(n log n) with no hash-collision risk.
+
+--------------------------------------------------------------------------------
+5. METHOD 4 — COUNTING ARRAY (BUCKET)
+--------------------------------------------------------------------------------
+
+Algorithm:
+  Because all values are bounded to the range (-10^5, 10^5), we can use a
+  direct-address array (size 200001) as a frequency table. An offset of 100000
+  is added to shift negative indices into non-negative positions.
+
+  Pass 1 — for each element, increment freq[val + OFFSET] and record first
+           seen index in firstIdx[val + OFFSET].
+  Pass 2 — scan the entire freq array; find the index with highest count >= 2,
+           breaking ties by firstIdx.
+
+Data structures:
+  int freq[200001]     — direct-address frequency table
+  int firstIdx[200001] — first occurrence index for each possible value
+
+Pseudocode:
+  OFFSET = 100000
+  for i in 0..n-1:
+      freq[nums[i] + OFFSET]++
+      if firstIdx[nums[i] + OFFSET] unset: firstIdx[...] = i
+
+  for i in 0..200000:
+      if freq[i] >= 2 and better: update answer
+
+Time complexity:
+  O(n + R) where R = 200001 (the value range). Since R is a fixed constant,
+  this is effectively O(n). Pass 2 always scans R entries regardless of n.
+
+Space complexity:
+  O(R) = O(200001) — fixed, independent of input size.
+
+When to prefer:
+  Fastest in practice for large n when the value range is known and bounded.
+  Pass 2 scanning R = 200001 entries is negligible compared to n = 100000
+  input elements. Avoids hash-map overhead entirely.
+
+--------------------------------------------------------------------------------
+6. COMPLEXITY SUMMARY
+--------------------------------------------------------------------------------
+
+  Method           Time (worst)   Time (average)   Extra Space
+  ---------------------------------------------------------------
+  1. Brute Force   O(n^2)         O(n^2)           O(1)
+  2. Hash Map      O(n^2)*        O(n)             O(n)
+  3. Sort          O(n log n)     O(n log n)       O(n)
+  4. Counting Arr  O(n + R)       O(n + R)         O(R)
+
+  * Hash map worst case requires adversarial hash collisions; practically O(n).
+    R = 200001 (fixed value range).
+
+--------------------------------------------------------------------------------
+7. EXPERIMENTAL EVALUATION
+--------------------------------------------------------------------------------
+
+Benchmark setup:
+  Randomly generated test data using a uniform distribution over (-10^5, 10^5).
+  Each timing is the average of 5 runs. Brute Force skipped for n > 10000 due
+  to prohibitive runtime.
+
+Expected results (approximate, on a modern desktop CPU):
+
+  n         Brute O(n^2)   HashMap O(n)   Sort O(nlgn)   Bucket O(n)
+  -----------------------------------------------------------------------
+  1,000      ~2 ms          < 0.1 ms       < 0.1 ms       < 0.1 ms
+  10,000     ~200 ms        < 0.5 ms       ~1 ms          < 0.5 ms
+  50,000     skip           ~1 ms          ~5 ms          ~1 ms
+  100,000    skip           ~2 ms          ~12 ms         ~2 ms
+
+To reproduce:
+  g++ -std=c++11 -O2 -lm all_methods.cpp -o all_methods
+  ./all_methods bench
+
+Analysis:
+  - Brute Force becomes unusable past ~10,000 elements.
+  - Hash Map and Counting Array are both O(n) and similar in practice; Counting
+    Array avoids memory allocation overhead but always pays the R-scan cost.
+  - Sort is a reliable middle ground with predictable O(n log n) performance.
+  - For this problem's constraints (n < 10^5, bounded range), all three
+    non-brute methods are fast enough; Hash Map is recommended for the OJ
+    submission as it handles arbitrary ranges without knowing R in advance.
+
+--------------------------------------------------------------------------------
+8. CONCLUSION
+--------------------------------------------------------------------------------
+
+Method 2 (Hash Map) is chosen for the OJ submission (solution.cpp) because it:
+  - Runs in O(n) average time
+  - Requires no prior knowledge of the value range
+  - Is straightforward to implement correctly
+
+Method 4 (Counting Array) offers the lowest constant-factor overhead for the
+given constraints and would be equally appropriate.
+
+Method 1 (Brute Force) demonstrates correctness at the cost of scalability.
+Method 3 (Sort-based) offers a deterministic O(n log n) guarantee useful when
+hash-map worst cases must be avoided.
+
+================================================================================

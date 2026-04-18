@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(g++ -std=c++11 -O2 -lm all_methods.cpp -o all_methods)",
+      "Bash(./all_methods)",
+      "Bash(where g++)",
+      "Bash(where cl *)",
+      "Read(//usr/**)",
+      "Read(//c/Program Files/mingw64/**)",
+      "Bash(cmd /c \"where g++\")",
+      "Bash(cmd /c \"where cl\")"
+    ]
+  }
+}
