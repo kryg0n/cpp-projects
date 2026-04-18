@@ -6,7 +6,6 @@ using namespace std;
 int main() {
     string line;
 
-    // keep reading lines until end of input
     while (getline(cin, line)) {
 
         // start from the last character and go backwards
@@ -16,13 +15,13 @@ int main() {
 
             // switch case of the letter
             if (ch >= 'a' && ch <= 'z') {
-                ch = ch - 32;     // small letter becomes big
+                ch = ch - 32;     // small to big
             }
             else if (ch >= 'A' && ch <= 'Z') {
-                ch = ch + 32;     // big letter becomes small
+                ch = ch + 32;     // big to small
             }
 
-            // print the character right away
+            // print the char
             cout << ch;
         }
 
