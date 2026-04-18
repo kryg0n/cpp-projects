@@ -1,2 +1,14 @@
+Total 16 questions (20%)
+• Mapping number of questions x in the assignment to the
+assignment score
+f(x)= 4 + 7x if x<8
+f(x)= 12 + 6x if 8<=x<12
+f(x)= 36 + 4x if 12<=x<=16
+
+do atleast 13
+
+
+2/13
+
 22 done
 226 DONE
