@@ -1,0 +1,197 @@
+1. Singly Linked List (Slides 32-44)
+
+a. Node structure
+   - data (int)
+   - next (pointer)
+
+b. Traverse
+   - tmp = first
+   - while tmp != NULL
+        tmp = tmp->next
+
+c. Count
+   - count = 0
+   - tmp = first
+   - while tmp != NULL
+        count++
+        tmp = tmp->next
+   - return count
+
+d. Print
+   - tmp = first
+   - while tmp != NULL
+        print tmp->data
+        tmp = tmp->next
+
+e. Search (by value)
+   - tmp = first
+   - while tmp != NULL
+        if tmp->data == target
+            return tmp
+        tmp = tmp->next
+   - return NULL
+
+f. Insert (sorted order)
+   - if first == NULL
+        first = newnode
+   - else if newnode->data < first->data
+        newnode->next = first
+        first = newnode
+   - else
+        p = first
+        while p->next != NULL AND newnode->data > p->next->data
+            p = p->next
+        newnode->next = p->next
+        p->next = newnode
+
+g. Remove (by node pointer)
+   - if q == first
+        first = first->next
+        delete q
+   - else
+        p = first
+        while p->next != q
+            p = p->next
+        p->next = q->next
+        delete q
+
+
+2. Singly Linked List with Dummy Header (Slides 49-53)
+
+a. Initialize
+   - first = new Node(0)  // dummy, value ignored
+
+b. Insert (no special cases)
+   - p = first
+   - while p->next != NULL AND newnode->data > p->next->data
+        p = p->next
+   - newnode->next = p->next
+   - p->next = newnode
+
+c. Remove (no special cases)
+   - p = first
+   - while p->next != q
+        p = p->next
+   - p->next = q->next
+   - delete q
+
+d. Print (skip dummy)
+   - p = first->next
+   - while p != NULL
+        print p->data
+        p = p->next
+
+
+3. Circular Lists (Slides 54-55)
+
+a. Structure
+   - last node's next points to first node
+   - can also have dummy header
+
+b. Traverse (full circle)
+   - tmp = first
+   - do
+        print tmp->data
+        tmp = tmp->next
+   - while tmp != first
+
+c. Advantage
+   - from any node, can reach any other node
+
+
+4. Doubly Linked List (Slides 56-58)
+
+a. Node structure
+   - data (int)
+   - Lnext (pointer to previous)
+   - Rnext (pointer to next)
+
+b. Insert (after node p)
+   - newnode->Lnext = p
+   - newnode->Rnext = p->Rnext
+   - if p->Rnext != NULL
+        p->Rnext->Lnext = newnode
+   - p->Rnext = newnode
+
+c. Remove (by node pointer p)
+   - if p->Lnext != NULL
+        p->Lnext->Rnext = p->Rnext
+   - if p->Rnext != NULL
+        p->Rnext->Lnext = p->Lnext
+   - delete p
+
+d. Advantage
+   - can traverse forward AND backward
+   - deletion only needs pointer to node (no previous search)
+
+
+5. Abstract Data Type (ADT) - Set Example (Slides 20-24)
+
+a. Set ADT structure
+   - Values: collection of distinct elements
+   - Condition: all elements are unique
+
+b. Operations
+   - Add(e)
+        post: e added to set
+   
+   - Remove(e)
+        pre: e exists in set
+        post: e removed from set
+   
+   - Size()
+        post: returns number of elements
+
+
+6. List ADT (Slide 31)
+
+a. Definition
+   - sequence of n nodes {x1, x2, ..., xn}
+   - only relative position matters
+
+b. Basic operations
+   - Insert(position, value)
+   - Delete(position)
+   - Search(value)
+   - Get(position)
+   - Update(position, value)
+   - Length()
+
+
+7. Exercise: Nth Node from End (Slide 38)
+
+a. Two-pointer method
+   - fast = first
+   - slow = first
+   
+   - for i = 1 to N
+        if fast == NULL return -1
+        fast = fast->next
+   
+   - while fast != NULL
+        slow = slow->next
+        fast = fast->next
+   
+   - return slow->data
+
+
+8. Exercise: Swap Adjacent Nodes (Slide 61)
+
+a. Swap by adjusting links (not data)
+   - find prev (node before node1)
+   - prev->next = node2
+   - node1->next = node2->next
+   - node2->next = node1
+
+
+9. Application: Convex Polygons (Slide 62)
+
+a. Structure
+   - each node represents a vertex/line segment
+   - circular linked list (closed polygon)
+
+b. Operations
+   - traverse edges
+   - insert vertex
+   - delete vertex
+   - partition polygon
